@@ -28,22 +28,8 @@ BOOT_ORDER=0xf4
 > 1 = SD card  
 > f = restart boot order loop
 
-> [!NOTE]  
-> Highlights information that users should take into account, even when skimming.
-
-> [!TIP]
-> Optional information to help a user be more successful.
-
-> [!IMPORTANT]  
-> Crucial information necessary for users to succeed.
-
-> [!WARNING]  
-> Critical content demanding immediate user attention due to potential risks.
-
-> [!CAUTION]
-> Negative potential consequences of an action.
-
-> [!CAUTION] In case Step 1 fails
+> [!IMPORTANT]
+> ##### In case Step 1 fails
 > If the existing OS on the NVMe overrides USB-MSD even after updating the EEPROM:
 >
 > ```bash
