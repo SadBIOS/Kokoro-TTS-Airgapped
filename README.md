@@ -29,8 +29,7 @@ BOOT_ORDER=0xf4
 > f = restart boot order loop
 
 > [!TIP]
-> #### **In case Step 1 fails**
-> ---
+> ### In case Step 1 fails
 > If the existing OS on the NVMe overrides USB-MSD even after updating the EEPROM:
 >
 > ```bash
