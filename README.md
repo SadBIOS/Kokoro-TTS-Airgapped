@@ -23,12 +23,12 @@ To
 BOOT_ORDER=0xf4
 ```
 > [!NOTE]
-> 6 = NVMe<br>
-> 4 = USB<br>
-> 1 = SD card<br>
+> 6 = NVMe  
+> 4 = USB  
+> 1 = SD card  
 > f = restart boot order loop
 
-> [!TIP] In case Step 1 fails
+> [!CAUTION] In case Step 1 fails
 > If the existing OS on the NVMe overrides USB-MSD even after updating the EEPROM:
 >
 > ```bash
