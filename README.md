@@ -147,7 +147,7 @@ Set order to
 BOOT_ORDER=0xf146 
 ```
 ## Setting up Kokoro-TTS
-> [!WARNING]
+> [!CAUTION]
 > Running commands from random people is a bad idea. With that being said, 
 > HERE WE GO! 
 ```bash
