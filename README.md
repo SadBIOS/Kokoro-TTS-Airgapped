@@ -23,16 +23,17 @@ To
 BOOT_ORDER=0xf4
 ```
 > [!NOTE]
-> 6 = NVMe
-> 4 = USB
-> 1 = SD card
+> 6 = NVMe<br>
+> 4 = USB<br>
+> 1 = SD card<br>
 > f = restart boot order loop
 
 > [!TIP] In case Step 1 fails
-> If the existing os on the NVMe overrides USB-MSD even after updating the eeprom
->```bash
->sudo dd if=/dev/zero of=/dev/nvme0n1 bs=64 status=progress
->```
+> If the existing OS on the NVMe overrides USB-MSD even after updating the EEPROM:
+>
+> ```bash
+> sudo dd if=/dev/zero of=/dev/nvme0n1 bs=64 status=progress
+> ```
 ---
 #### 2. Bypass the current limit enforced by 3<sup>rd</sup> party adapters
 There is a 5V 5A requirement enforced by the system. I have verified that the whole module (including the NVMe Hat) does not consume nearly that amount of power. Most normal usb adapters cap out at 3 amps at the 5V rail (I know it's not a rail rather a voltage level negotiated between the power supply and the device but I digress). Thus the official adapters have a special handshake that they do with the Renesas **DA9091** *“Gilmour”* PMIC.
