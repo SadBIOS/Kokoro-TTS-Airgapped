@@ -7,7 +7,7 @@
   </a>
 </p>
 
-## Setting up the Raspberry Pi and installing essencial packages (before installing to disk)
+## Setting up the Raspberry Pi and installing essencial packages (before writing to disk)
 ### 1. Force boot to *USB-MSD* overriding the interal boot drive
 Set boot mode to usb (this is required if only a previous install exists on the same boot device).
 
