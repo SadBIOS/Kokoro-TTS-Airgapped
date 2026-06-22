@@ -1,0 +1,13 @@
+[Unit]
+Description=Kokoro TTS Web Frontend
+After=network.target kokoro.service
+
+[Service]
+WorkingDirectory=%h/tts-web
+Environment="PATH=%h/Kokoro-FastAPI/venv/bin"
+ExecStart=%h/Kokoro-FastAPI/venv/bin/uvicorn app:app --host 0.0.0.0 --port 8080
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target
