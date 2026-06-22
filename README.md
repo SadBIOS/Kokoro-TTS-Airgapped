@@ -8,7 +8,7 @@
 </p>
 
 ## Setting up the Raspberry Pi and installing essencial packages (before installing to disk)
-#### 1. Force boot to *USB-MSD* overriding the interal boot drive
+### 1. Force boot to *USB-MSD* overriding the interal boot drive
 Set boot mode to usb (this is required if only a previous install exists on the same boot device).
 
 ```bash
@@ -36,7 +36,7 @@ BOOT_ORDER=0xf4
 > sudo dd if=/dev/zero of=/dev/nvme0n1 bs=64 status=progress
 > ```
 ---
-#### 2. Bypass the current limit enforced by 3<sup>rd</sup> party adapters
+### 2. Bypass the current limit enforced by 3<sup>rd</sup> party adapters
 There is a 5V 5A requirement enforced by the system. I have verified that the whole module (including the NVMe Hat) does not consume nearly that amount of power. Most normal usb adapters cap out at 3 amps at the 5V rail (I know it's not a rail rather a voltage level negotiated between the power supply and the device but I digress). Thus the official adapters have a special handshake that they do with the Renesas **DA9091** *“Gilmour”* PMIC.
 ```bash
 sudo rpi-eeprom-config --edit
@@ -50,7 +50,7 @@ check if it working (expected output is ```throttled=0x0```)
 vcgencmd get_throttled
 ```
 ---
-#### 3. Fan speed and optimizing thermals
+### 3. Fan speed and optimizing thermals
 Edit the following with superuser permissions (I am using the micro text editor, because I don't hate myself and I have nothing to prove).
 ```bash
 sudo micro /boot/firmware/config.txt
@@ -67,7 +67,7 @@ dtparam=fan_speed1=127
 > * ***fan_temp1_hyst*** is the temperature hysteresis of the first thermal zone (to prevent rapid cycling as it **bang-bang** control)
 > * ***fan_speed1*** is the first speed position in the **8-bit PWM (0~255)** controller it can also be stacked to form a temperature curve
 ---
-#### 4. Set usb max current ```not required for this```
+### 4. Set usb max current ```not required for this```
 Edit the following with superuser permissions (I am using the micro text editor. Again, I don't hate myself and I have nothing to prove).
 ```bash
 sudo micro /boot/firmware/config.txt
@@ -81,7 +81,7 @@ Check if it working (expected output is usb_max_current_enable=1)
 vcgencmd get_config usb_max_current_enable
 ```
 ---
-#### 5. Speed boost for the PCIe Bus ```not required for µSD boot```
+### 5. Speed boost for the PCIe Bus ```not required for µSD boot```
 Check current bus speed
 ```bash
 sudo lspci -vvv -s 0001:01:00.0 | grep -i Lnk
@@ -102,7 +102,7 @@ Add the following at the end
 dtparam=pciex1_gen=3
 ```
 ---
-#### 6. Disable bluetooth and WiFi ```this is strictly not necessary```
+### 6. Disable bluetooth and WiFi ```this is strictly not necessary```
 Edit with superuser permissions (ykw I'm not saying this anymore)
 ```bash
 sudo bash /boot/firmware/config.txt
@@ -114,31 +114,31 @@ dtoverlay=disable-bt
 ```
 ----
 ## Install os to NVMe
-#### 1. Cleanup packages
+### 1. Cleanup packages
 ```bash
 sudo apt autoremove
 ```
-#### 2. Verify boot drive
+### 2. Verify boot drive
 It should show ```/dev/sda2``` as it is currently USB-MSD. Use ```findmnt /``` to check the mount point.
 
-#### 3. Wipe NVMe drive
+### 3. Wipe NVMe drive
 My case it's ```/dev/nvme0n1```
 ```bash
 sudo wipefs -a /dev/nvme0n1
 ```
-#### 3. Wipe disk partitioning metadata
+### 3. Wipe disk partitioning metadata
 ```bash
 sudo sgdisk --zap-all /dev/nvme0n1
 ```
-#### 3. Clone os from USB-MSD to NVMe
+### 3. Clone os from USB-MSD to NVMe
 ```bash
 sudo dd if=/dev/sda of=/dev/nvme0n1 bs=64M status=progress conv=fsync
 ```
-#### 4. Write all pending cache data to disk
+### 4. Write all pending cache data to disk
 ```bash
 sync
 ```
-#### 5. Finally set boot order to NVMe
+### 5. Finally set boot order to NVMe
 ```bash
 sudo rpi-eeprom-config --edit
 ```
