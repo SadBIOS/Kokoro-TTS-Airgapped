@@ -1,12 +1,4 @@
 # Kokoro TTS on a Raspberry Pi
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=TGe5HAF4cRE">
-    <img src="https://img.youtube.com/vi/TGe5HAF4cRE/maxresdefault.jpg"
-         alt="Watch the demo video"
-         width="800">
-  </a>
-</p>
-
 ## Setting up the Raspberry Pi and installing essencial packages (before writing to disk)
 ### 1. Force boot to *USB-MSD* overriding the interal boot drive
 Set boot mode to usb (this is required if only a previous install exists on the same boot device).
