@@ -1,7 +1,7 @@
 # Kokoro TTS on a Raspberry Pi
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/SadBIOS/Kokoro-TTS-Airgapped/refs/heads/main/HOME_SCR.png" alt="Image" width="70%">
+  <img src="https://raw.githubusercontent.com/SadBIOS/Kokoro-TTS-Airgapped/refs/heads/main/HOME_SCR.png" alt="How I Look Mate?" width="70%">
 </p>
 
 
