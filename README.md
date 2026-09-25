@@ -1,4 +1,4 @@
-# Kokoro TTS on a Raspberry Pi
+# Kokoro TTS on a Raspberry Pi<sup>®</sup>
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/SadBIOS/Kokoro-TTS-Airgapped/refs/heads/main/HOME_SCR.png" alt="How I Look Mate?" width="70%">
