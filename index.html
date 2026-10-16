@@ -1,257 +1,566 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kokoro TTS Japanese</title>
-    <style>
-        :root {
-            --bg-color: #121212;
-            --container-bg: #1e1e1e;
-            --text-color: #e0e0e0;
-            --accent-color: #8c9eff;
-            --btn-hover: #536dfe;
-            --border-color: #333;
-        }
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: system-ui, -apple-system, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: var(--container-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            width: 100%;
-            max-width: 650px;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        button, select {
-            background-color: #333;
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.2s;
-        }
-        button:hover { background-color: var(--btn-hover); color: #fff; }
-        textarea {
-            width: 100%;
-            height: 180px;
-            background-color: #2c2c2c;
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 1rem;
-            font-size: 1rem;
-            resize: vertical;
-            box-sizing: border-box;
-            margin-bottom: 1rem;
-        }
-        .controls {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            flex: 1;
-        }
-        .actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        .actions button {
-            flex: 1;
-            background-color: var(--accent-color);
-            color: #000;
-            font-weight: bold;
-        }
-        .actions button:hover { background-color: #5c6bc0; }
-        .audio-container { margin-top: 1.5rem; }
-        audio { width: 100%; border-radius: 6px; }
-        #status-msg { display: none; margin-top: 1rem; color: var(--accent-color); font-size: 0.95rem; text-align: center; font-style: italic;}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<title>Kokoro TTS / Voice Lab</title>
+<style>
+@import url('data:text/css,');
+
+:root {
+    --ink: #0d1115;
+    --ink-2: #12191e;
+    --panel: #171f24;
+    --panel-2: #1c262c;
+    --paper: #eee9dd;
+    --paper-2: #e2ddcf;
+    --text: #f4f0e7;
+    --muted: #8e999d;
+    --line: rgba(238,233,221,.13);
+    --line-strong: rgba(238,233,221,.24);
+    --coral: #e36f5d;
+    --coral-hot: #f18470;
+    --cyan: #6fc9c5;
+    --yellow: #e4c56a;
+    --green: #81c59b;
+    --danger: #e27676;
+    --shadow: 0 22px 60px rgba(0,0,0,.34);
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    --ui: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --reading: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+    --display: "Trebuchet MS", "Hiragino Kaku Gothic ProN", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { min-height: 100%; background: var(--ink); }
+body {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text);
+    font-family: var(--ui);
+    background:
+        radial-gradient(circle at 78% 8%, rgba(111,201,197,.075), transparent 25rem),
+        radial-gradient(circle at 12% 88%, rgba(227,111,93,.055), transparent 28rem),
+        linear-gradient(135deg, #0c1014 0%, #11181d 58%, #0d1216 100%);
+    overflow-x: hidden;
+}
+
+button, select, textarea { font: inherit; }
+button { color: inherit; }
+button:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+.app-shell {
+    width: min(1500px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 22px 0 28px;
+}
+
+.topbar {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+}
+.topbar::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -1px;
+    width: 92px; height: 1px;
+    background: var(--coral);
+}
+.brand { display: flex; align-items: baseline; gap: 12px; }
+.brand h1 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(1.15rem, 2vw, 1.55rem);
+    letter-spacing: .11em;
+    font-weight: 800;
+}
+.brand .slash { color: var(--coral); }
+.brand .sub {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: .64rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+.top-actions { display: flex; align-items: center; gap: 9px; }
+.local-status, .lang-button {
+    border: 1px solid var(--line-strong);
+    background: rgba(255,255,255,.025);
+    min-height: 36px;
+    padding: 0 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: .66rem;
+    letter-spacing: .08em;
+}
+.local-status .lamp { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px rgba(129,197,155,.08); }
+.lang-button { cursor: pointer; color: var(--text); transition: .18s ease; }
+.lang-button:hover { border-color: var(--cyan); color: var(--cyan); }
+
+.workstation {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr) 270px;
+    gap: 1px;
+    margin-top: 18px;
+    border: 1px solid var(--line);
+    background: var(--line);
+    box-shadow: var(--shadow);
+}
+.panel { background: rgba(20,28,33,.96); min-width: 0; }
+.panel-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 38px;
+    padding: 0 15px;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: .61rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+.panel-label strong { color: var(--paper); font-weight: 600; }
+
+.character-panel { padding-bottom: 18px; }
+.character-stage {
+    margin: 18px 18px 16px;
+    min-height: 285px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    background:
+        linear-gradient(135deg, rgba(111,201,197,.09), transparent 48%),
+        linear-gradient(315deg, rgba(227,111,93,.08), transparent 45%),
+        #11181d;
+}
+.character-stage::before,
+.character-stage::after {
+    content: "";
+    position: absolute;
+    width: 15px; height: 15px;
+    border-color: rgba(238,233,221,.35);
+    pointer-events: none;
+}
+.character-stage::before { top: 9px; left: 9px; border-top: 1px solid; border-left: 1px solid; }
+.character-stage::after { right: 9px; bottom: 9px; border-right: 1px solid; border-bottom: 1px solid; }
+.portrait {
+    position: absolute;
+    left: 50%; top: 49%;
+    width: 142px; height: 178px;
+    transform: translate(-50%, -50%);
+}
+.portrait .head {
+    position: absolute; left: 29px; top: 8px; width: 84px; height: 104px;
+    background: #d7c1ad;
+    border: 2px solid #27333a;
+    border-radius: 46% 54% 48% 52% / 44% 43% 57% 56%;
+    z-index: 2;
+}
+.portrait .hair {
+    position: absolute; left: 20px; top: 0; width: 103px; height: 72px;
+    background: #252d34;
+    clip-path: polygon(4% 50%, 12% 19%, 37% 5%, 72% 11%, 98% 42%, 78% 36%, 91% 69%, 63% 55%, 55% 90%, 41% 61%, 22% 79%, 26% 48%);
+    z-index: 3;
+}
+.portrait .ear { position:absolute; top:53px; width:15px; height:22px; background:#d7c1ad; border:2px solid #27333a; z-index:1; }
+.portrait .ear.left { left:21px; border-radius: 70% 20% 20% 70%; }
+.portrait .ear.right { right:21px; border-radius: 20% 70% 70% 20%; }
+.portrait .eye { position:absolute; top:58px; width:8px; height:4px; background:#182026; border-radius: 50%; z-index:4; }
+.portrait .eye.left { left:49px; } .portrait .eye.right { right:49px; }
+.portrait .mouth { position:absolute; top:82px; left:61px; width:20px; height:7px; border-bottom:2px solid #27333a; border-radius: 0 0 50% 50%; z-index:4; }
+.portrait .neck { position:absolute; left:58px; top:101px; width:27px; height:25px; background:#c7aa96; z-index:1; }
+.portrait .body { position:absolute; left:11px; top:117px; width:120px; height:61px; background:#b95f54; border:2px solid #27333a; clip-path: polygon(25% 0, 75% 0, 100% 100%, 0 100%); }
+.portrait .collar { position:absolute; left:48px; top:117px; width:47px; height:27px; background:#eee9dd; clip-path: polygon(0 0, 50% 55%, 100% 0, 78% 100%, 22% 100%); z-index:2; }
+.portrait::after { content:""; position:absolute; left:8px; bottom:-8px; width:126px; height:1px; background:var(--cyan); opacity:.45; }
+.character-caption { padding: 0 18px; }
+.voice-code { color: var(--cyan); font: 600 .62rem var(--mono); letter-spacing: .15em; text-transform: uppercase; }
+.voice-name { margin-top: 5px; font-family: var(--display); font-size: 1.35rem; letter-spacing: .03em; }
+.voice-meta { display:flex; gap:8px; margin-top:8px; color:var(--muted); font: .61rem var(--mono); }
+.voice-meta span { border-left:1px solid var(--line-strong); padding-left:8px; }
+.state-line { margin-top:18px; padding-top:12px; border-top:1px solid var(--line); display:flex; align-items:center; gap:8px; color:var(--muted); font: .61rem var(--mono); letter-spacing:.1em; }
+.state-dot { width:7px; height:7px; background:var(--cyan); box-shadow:0 0 0 4px rgba(111,201,197,.08); }
+.state-dot.busy { background:var(--coral); animation: pulse 1s infinite; }
+
+.script-panel { background: var(--paper); color: #20262a; display:flex; flex-direction:column; min-height: 560px; }
+.script-panel .panel-label { color:#74736d; border-color:rgba(32,38,42,.13); }
+.script-panel .panel-label strong { color:#252a2d; }
+.editor-wrap { padding: 28px 32px 24px; display:flex; flex:1; flex-direction:column; }
+.editor-kicker { color:#9a5449; font:600 .61rem var(--mono); letter-spacing:.15em; text-transform:uppercase; }
+.editor-title { margin:7px 0 19px; font-family:var(--display); font-size:clamp(1.5rem, 2.5vw, 2.05rem); letter-spacing:-.02em; }
+textarea#text-input {
+    flex:1; width:100%; min-height:290px; resize:none; border:0; border-top:1px solid rgba(32,38,42,.15); border-bottom:1px solid rgba(32,38,42,.15);
+    background:transparent; color:#20262a; padding:22px 2px; font-family:var(--reading); font-size:clamp(1.05rem, 1.45vw, 1.25rem); line-height:1.95; letter-spacing:.025em;
+}
+textarea#text-input::placeholder { color:#a9a39a; }
+.editor-foot { display:flex; justify-content:space-between; gap:15px; align-items:center; padding-top:13px; color:#7b7972; font: .62rem var(--mono); }
+.editor-tools { display:flex; gap:8px; }
+.small-btn { border:1px solid rgba(32,38,42,.18); background:rgba(255,255,255,.22); color:#555650; padding:7px 9px; cursor:pointer; font: .62rem var(--mono); transition:.18s ease; }
+.small-btn:hover { background:#d8d2c5; color:#20262a; }
+.generate-row { margin-top:18px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.generate-note { color:#7d7a73; font: .61rem var(--mono); line-height:1.5; }
+.primary-btn {
+    border:0; background:var(--coral); color:#fff8ee; min-height:50px; padding:0 23px; cursor:pointer; font-weight:800; letter-spacing:.08em; text-transform:uppercase; position:relative; overflow:hidden; transition:.18s ease;
+}
+.primary-btn::before { content:""; position:absolute; inset:0; transform:translateX(-105%); background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent); transition:.4s; }
+.primary-btn:hover::before { transform:translateX(105%); }
+.primary-btn:hover { background:var(--coral-hot); transform:translateY(-1px); }
+.primary-btn:active { transform:translateY(1px); }
+.primary-btn:disabled { opacity:.55; cursor:wait; transform:none; }
+
+.voice-panel { padding-bottom:16px; }
+.voice-list { padding:12px; display:grid; gap:6px; }
+.voice-option { width:100%; text-align:left; border:1px solid transparent; background:transparent; padding:11px 10px; cursor:pointer; display:grid; grid-template-columns:27px 1fr auto; gap:10px; align-items:center; transition:.16s ease; }
+.voice-option:hover { background:rgba(255,255,255,.035); border-color:var(--line); }
+.voice-option.active { background:rgba(111,201,197,.07); border-color:rgba(111,201,197,.35); }
+.voice-mark { width:27px; height:27px; border:1px solid var(--line-strong); display:grid; place-items:center; font: .56rem var(--mono); color:var(--muted); }
+.voice-option.active .voice-mark { border-color:var(--cyan); color:var(--cyan); }
+.voice-option-name { font-size:.78rem; }
+.voice-option-type { color:var(--muted); font: .56rem var(--mono); margin-top:3px; }
+.voice-check { color:var(--cyan); opacity:0; font: .72rem var(--mono); }
+.voice-option.active .voice-check { opacity:1; }
+.control-section { margin:9px 12px 0; border-top:1px solid var(--line); padding-top:14px; }
+.control-title { color:var(--muted); font: .6rem var(--mono); letter-spacing:.14em; text-transform:uppercase; margin-bottom:8px; }
+select#format-select { width:100%; appearance:none; border:1px solid var(--line-strong); background:var(--panel-2); color:var(--text); padding:11px 12px; border-radius:0; cursor:pointer; }
+.format-wrap { position:relative; }
+.format-wrap::after { content:"⌄"; position:absolute; right:12px; top:8px; color:var(--muted); pointer-events:none; }
+.download-btn { width:100%; margin-top:10px; min-height:42px; border:1px solid var(--line-strong); background:transparent; cursor:pointer; color:var(--paper); font:600 .65rem var(--mono); letter-spacing:.08em; transition:.18s; }
+.download-btn:hover { border-color:var(--yellow); color:var(--yellow); background:rgba(228,197,106,.05); }
+.download-btn:disabled { opacity:.45; cursor:wait; }
+
+.audio-panel { margin-top:1px; background:rgba(17,24,29,.98); }
+.audio-main { padding:18px 20px 20px; }
+.audio-top { display:flex; align-items:center; justify-content:space-between; gap:15px; }
+.audio-title { display:flex; align-items:baseline; gap:10px; }
+.audio-title strong { font-family:var(--display); font-size:1rem; }
+.audio-title span { color:var(--muted); font: .57rem var(--mono); }
+.audio-status { color:var(--green); font: .58rem var(--mono); letter-spacing:.08em; }
+.wave-wrap { height:102px; margin-top:14px; border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.02), transparent); position:relative; overflow:hidden; }
+#waveform { width:100%; height:100%; display:block; }
+.wave-grid { position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(90deg, transparent 0, transparent calc(10% - 1px), rgba(238,233,221,.045) 10%); }
+.audio-controls { display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:12px; margin-top:13px; }
+.transport { width:42px; height:36px; border:1px solid var(--line-strong); background:transparent; cursor:pointer; font-size:.9rem; transition:.15s; }
+.transport:hover { border-color:var(--cyan); color:var(--cyan); }
+.time { color:var(--muted); font: .62rem var(--mono); white-space:nowrap; }
+#seek { width:100%; accent-color:var(--coral); cursor:pointer; }
+.volume { width:90px; accent-color:var(--cyan); }
+.hidden-audio { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+.status-msg { min-height:20px; margin-top:8px; color:var(--coral-hot); font: .63rem var(--mono); }
+
+.footer-note { display:flex; justify-content:space-between; gap:20px; padding:14px 2px 0; color:#687277; font: .58rem var(--mono); letter-spacing:.04em; }
+
+@keyframes pulse { 0%,100%{ transform:scale(1); opacity:.75 } 50%{ transform:scale(1.5); opacity:1 } }
+@media (max-width: 1120px) {
+    .workstation { grid-template-columns: 220px minmax(0, 1fr); }
+    .voice-panel { grid-column: 1 / -1; display:grid; grid-template-columns:1fr 1fr; }
+    .voice-panel .panel-label { grid-column:1 / -1; }
+    .voice-list { grid-template-columns:repeat(5,1fr); }
+    .control-section { border-top:0; border-left:1px solid var(--line); margin:14px 0; padding:0 14px; }
+}
+@media (max-width: 760px) {
+    .app-shell { width:min(100% - 20px, 680px); padding-top:10px; }
+    .topbar { align-items:flex-start; padding:10px 0 13px; }
+    .brand { flex-direction:column; gap:2px; }
+    .local-status { display:none; }
+    .workstation { grid-template-columns:1fr; }
+    .character-panel { display:block; }
+    .character-stage { min-height:210px; margin-bottom:14px; }
+    .portrait { transform:translate(-50%,-50%) scale(.8); }
+    .voice-panel { display:block; }
+    .voice-list { grid-template-columns:1fr 1fr; }
+    .control-section { border-top:1px solid var(--line); border-left:0; margin:9px 12px 0; padding:14px 0 0; }
+    .editor-wrap { padding:22px 18px 20px; }
+    textarea#text-input { min-height:260px; }
+    .generate-row { align-items:stretch; flex-direction:column; }
+    .primary-btn { width:100%; }
+    .audio-controls { grid-template-columns:auto 1fr auto; }
+    .volume { display:none; }
+    .footer-note { flex-direction:column; gap:4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.01ms !important; }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h2 id="app-title" style="margin: 0;">Kokoro 音声合成</h2>
-            <button id="lang-btn" onclick="toggleLang()">English</button>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">
+            <h1>KOKORO TTS <span class="slash">/</span> VOICE LAB</h1>
+            <span class="sub" id="brand-sub">Japanese voice TTS</span>
         </div>
-        
-        <textarea id="text-input" placeholder="ここに日本語のテキストを入力してください..."></textarea>
+        <div class="top-actions">
+            <div class="local-status"><span class="lamp"></span><span id="local-label">AIR-GAPPED · LOCAL ONLY</span></div>
+            <button class="lang-button" id="lang-btn" type="button" onclick="toggleLang()">EN / 日本語</button>
+        </div>
+    </header>
 
-        <div class="controls">
-            <div class="control-group">
-                <label id="lbl-voice">音声:</label>
-                <select id="voice-select">
-                    <option value="jf_alpha">jf_alpha (Female)</option>
-                    <option value="jf_gongitsune">jf_gongitsune (Female)</option>
-                    <option value="jf_nezumi">jf_nezumi (Female)</option>
-                    <option value="jf_tebukuro">jf_tebukuro (Female)</option>
-                    <option value="jm_kumo">jm_kumo (Male)</option>
-                </select>
+    <main class="workstation">
+        <aside class="panel character-panel">
+            <div class="panel-label"><strong id="character-label">CHARACTER / VOICE</strong><span>01</span></div>
+            <div class="character-stage" aria-hidden="true">
+                <div class="portrait" id="portrait">
+                    <div class="hair"></div><div class="ear left"></div><div class="ear right"></div>
+                    <div class="head"></div><div class="eye left"></div><div class="eye right"></div>
+                    <div class="mouth"></div><div class="neck"></div><div class="body"></div><div class="collar"></div>
+                </div>
             </div>
-            <div class="control-group">
-                <label id="lbl-format">フォーマット:</label>
-                <select id="format-select">
-                    <option value="wav">WAV</option>
-                    <option value="mp3">MP3</option>
-                    <option value="ogg">OGG</option>
-                    <option value="flac">FLAC</option>
-                </select>
+            <div class="character-caption">
+                <div class="voice-code" id="voice-code">JF_ALPHA</div>
+                <div class="voice-name" id="voice-name">jf_alpha</div>
+                <div class="voice-meta"><span id="voice-gender">FEMALE</span><span id="voice-engine">KOKORO TTS</span></div>
+                <div class="state-line"><span class="state-dot" id="state-dot"></span><span id="state-text">READY TO RECORD</span></div>
             </div>
-        </div>
+        </aside>
 
-        <div class="actions">
-            <button id="btn-play" onclick="playAudio()">再生</button>
-            <button id="btn-download" onclick="downloadAudio()">ダウンロード</button>
-        </div>
+        <section class="panel script-panel">
+            <div class="panel-label"><strong id="script-label">SCRIPT / MANUSCRIPT</strong><span>02</span></div>
+            <div class="editor-wrap">
+                <div class="editor-kicker" id="editor-kicker">VOICE SCRIPT</div>
+                <div class="editor-title" id="editor-title">Give the voice something to say.</div>
+                <textarea id="text-input" spellcheck="false" placeholder="ここに日本語のテキストを入力してください…"></textarea>
+                <div class="editor-foot">
+                    <div><span id="count-label">CHARACTERS</span> <strong id="char-count">0</strong></div>
+                    <div class="editor-tools">
+                        <button class="small-btn" id="clear-btn" type="button">CLEAR</button>
+                        <button class="small-btn" id="sample-btn" type="button">SAMPLE</button>
+                    </div>
+                </div>
+                <div class="generate-row">
+                    <div class="generate-note" id="generate-note">Local generation · no external service<br>Playback uses the generated WAV.</div>
+                    <button class="primary-btn" id="generate-btn" type="button" onclick="playAudio()">GENERATE VOICE</button>
+                </div>
+            </div>
+        </section>
 
-        <div id="status-msg">処理中... / Processing...</div>
+        <aside class="panel voice-panel">
+            <div class="panel-label"><strong id="voice-label">VOICE DECK</strong><span>03</span></div>
+            <div class="voice-list" id="voice-list"></div>
+            <div class="control-section">
+                <div class="control-title" id="format-label">EXPORT FORMAT</div>
+                <div class="format-wrap">
+                    <select id="format-select" aria-label="Export format">
+                        <option value="wav">WAV · lossless</option>
+                        <option value="mp3">MP3 · compact</option>
+                        <option value="ogg">OGG · open</option>
+                        <option value="flac">FLAC · lossless</option>
+                    </select>
+                </div>
+                <button class="download-btn" id="btn-download" type="button" onclick="downloadAudio()">↓ DOWNLOAD AUDIO</button>
+            </div>
+        </aside>
+    </main>
 
-        <div class="audio-container">
-            <audio id="audio-player" controls></audio>
+    <section class="panel audio-panel">
+        <div class="panel-label"><strong id="audio-label">AUDIO / PLAYBACK</strong><span>04</span></div>
+        <div class="audio-main">
+            <div class="audio-top">
+                <div class="audio-title"><strong id="audio-title">Latest take</strong><span id="audio-file">NO AUDIO LOADED</span></div>
+                <div class="audio-status" id="audio-status">READY</div>
+            </div>
+            <div class="wave-wrap"><canvas id="waveform"></canvas><div class="wave-grid"></div></div>
+            <div class="audio-controls">
+                <button class="transport" id="play-toggle" type="button" aria-label="Play or pause" disabled>▶</button>
+                <input id="seek" type="range" min="0" max="100" value="0" disabled aria-label="Seek audio">
+                <span class="time" id="time-readout">00:00 / 00:00</span>
+                <input class="volume" id="volume" type="range" min="0" max="1" value="1" step="0.01" disabled aria-label="Volume">
+            </div>
+            <div class="status-msg" id="status-msg" aria-live="polite"></div>
+            <audio id="audio-player" class="hidden-audio"></audio>
         </div>
+    </section>
+
+    <div class="footer-note">
+        <span id="footer-left">LOCAL PIPELINE · KOKORO → BROWSER AUDIO</span>
+        <span id="footer-right">NO CDN · NO REMOTE ASSETS · NO TELEMETRY</span>
     </div>
+</div>
 
-    <script>
-        let currentLang = 'ja';
-        const i18n = {
-            ja: {
-                title: "Kokoro 音声合成",
-                langBtn: "English",
-                placeholder: "ここに日本語のテキストを入力してください...",
-                lblVoice: "音声:",
-                lblFormat: "フォーマット:",
-                btnPlay: "再生",
-                btnDownload: "ダウンロード",
-                statusProcessing: "処理中..."
-            },
-            en: {
-                title: "Kokoro TTS",
-                langBtn: "日本語",
-                placeholder: "Enter Japanese text here...",
-                lblVoice: "Voice:",
-                lblFormat: "Format:",
-                btnPlay: "Play",
-                btnDownload: "Download",
-                statusProcessing: "Processing..."
-            }
-        };
+<script>
+const voices = [
+    { value: 'jf_alpha', name: 'jf_alpha', gender: 'FEMALE', mark: 'α' },
+    { value: 'jf_gongitsune', name: 'jf_gongitsune', gender: 'FEMALE', mark: '狐' },
+    { value: 'jf_nezumi', name: 'jf_nezumi', gender: 'FEMALE', mark: '鼠' },
+    { value: 'jf_tebukuro', name: 'jf_tebukuro', gender: 'FEMALE', mark: '手' },
+    { value: 'jm_kumo', name: 'jm_kumo', gender: 'MALE', mark: '雲' }
+];
 
-        function toggleLang() {
-            currentLang = currentLang === 'ja' ? 'en' : 'ja';
-            const t = i18n[currentLang];
-            document.getElementById('app-title').innerText = t.title;
-            document.getElementById('lang-btn').innerText = t.langBtn;
-            document.getElementById('text-input').placeholder = t.placeholder;
-            document.getElementById('lbl-voice').innerText = t.lblVoice;
-            document.getElementById('lbl-format').innerText = t.lblFormat;
-            document.getElementById('btn-play').innerText = t.btnPlay;
-            document.getElementById('btn-download').innerText = t.btnDownload;
-        }
+let currentLang = 'ja';
+let currentVoice = voices[0].value;
+let currentObjectUrl = null;
+let audioContext = null;
+let audioBuffer = null;
 
-        function getPayload() {
-            return {
-                text: document.getElementById('text-input').value,
-                voice: document.getElementById('voice-select').value,
-                format: document.getElementById('format-select').value
-            };
-        }
+const i18n = {
+    ja: {
+        brandSub: 'Japanese voice workstation', local: 'AIR-GAPPED · LOCAL ONLY', character: 'CHARACTER / VOICE', script: 'SCRIPT / MANUSCRIPT', voice: 'VOICE DECK', audio: 'AUDIO / PLAYBACK',
+        kicker: 'VOICE SCRIPT', title: '声に、言葉を。', placeholder: 'ここに日本語のテキストを入力してください…', count: 'CHARACTERS', clear: 'CLEAR', sample: 'SAMPLE', note: 'ローカル生成 · 外部サービスなし<br>生成したWAVをブラウザで再生します。', generate: 'GENERATE VOICE', format: 'EXPORT FORMAT', download: '↓ DOWNLOAD AUDIO', latest: 'Latest take', noAudio: 'NO AUDIO LOADED', ready: 'READY', readyCharacter: 'READY TO RECORD', generating: 'GENERATING…', processing: 'PROCESSING AUDIO…', readyPlay: 'READY TO PLAY', playing: 'PLAYING', error: 'GENERATION ERROR', footerLeft: 'LOCAL PIPELINE · KOKORO → BROWSER AUDIO', footerRight: 'NO CDN · NO REMOTE ASSETS · NO TELEMETRY', sampleText: '今日は新しい声のテストです。静かなスタジオから、言葉がゆっくりと届きます。'
+    },
+    en: {
+        brandSub: 'Japanese voice workstation', local: 'AIR-GAPPED · LOCAL ONLY', character: 'CHARACTER / VOICE', script: 'SCRIPT / MANUSCRIPT', voice: 'VOICE DECK', audio: 'AUDIO / PLAYBACK',
+        kicker: 'VOICE SCRIPT', title: 'Give the voice something to say.', placeholder: 'Enter Japanese text here…', count: 'CHARACTERS', clear: 'CLEAR', sample: 'SAMPLE', note: 'Local generation · no external service<br>Playback uses the generated WAV.', generate: 'GENERATE VOICE', format: 'EXPORT FORMAT', download: '↓ DOWNLOAD AUDIO', latest: 'Latest take', noAudio: 'NO AUDIO LOADED', ready: 'READY', readyCharacter: 'READY TO RECORD', generating: 'GENERATING…', processing: 'PROCESSING AUDIO…', readyPlay: 'READY TO PLAY', playing: 'PLAYING', error: 'GENERATION ERROR', footerLeft: 'LOCAL PIPELINE · KOKORO → BROWSER AUDIO', footerRight: 'NO CDN · NO REMOTE ASSETS · NO TELEMETRY', sampleText: '今日は新しい声のテストです。静かなスタジオから、言葉がゆっくりと届きます。'
+    }
+};
 
-        function setStatus(active) {
-            const statusDiv = document.getElementById('status-msg');
-            statusDiv.innerText = i18n[currentLang].statusProcessing;
-            statusDiv.style.display = active ? 'block' : 'none';
-            document.getElementById('btn-play').disabled = active;
-            document.getElementById('btn-download').disabled = active;
-        }
+const $ = id => document.getElementById(id);
+const textInput = $('text-input');
+const player = $('audio-player');
+const seek = $('seek');
+const volume = $('volume');
+const playToggle = $('play-toggle');
 
-        async function playAudio() {
-            const payload = getPayload();
-            if (!payload.text.trim()) return;
+function renderVoices() {
+    $('voice-list').innerHTML = voices.map((v, i) => `
+        <button class="voice-option ${v.value === currentVoice ? 'active' : ''}" type="button" data-voice="${v.value}" aria-pressed="${v.value === currentVoice}">
+            <span class="voice-mark">${v.mark}</span>
+            <span><span class="voice-option-name">${v.name}</span><span class="voice-option-type">${v.gender} · KOKORO</span></span>
+            <span class="voice-check">●</span>
+        </button>`).join('');
+    document.querySelectorAll('.voice-option').forEach(btn => btn.addEventListener('click', () => selectVoice(btn.dataset.voice)));
+}
 
-            setStatus(true);
-            try {
-                const response = await fetch('/api/play', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
-                if (!response.ok) {
-                    const errText = await response.text();
-                    throw new Error(errText || "Backend generation failed");
-                }
-                
-                const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
-                const player = document.getElementById('audio-player');
-                player.src = url;
-                player.play();
-            } catch (error) {
-                console.error(error);
-                alert("Playback Error: " + error.message);
-            } finally {
-                setStatus(false);
-            }
-        }
+function selectVoice(value) {
+    currentVoice = value;
+    const voice = voices.find(v => v.value === value) || voices[0];
+    $('voice-code').textContent = voice.value.toUpperCase();
+    $('voice-name').textContent = voice.name;
+    $('voice-gender').textContent = voice.gender;
+    renderVoices();
+    if (!player.src || player.readyState === 0) setCharacterState('ready');
+}
 
-        async function downloadAudio() {
-            const payload = getPayload();
-            if (!payload.text.trim()) return;
+function toggleLang() {
+    currentLang = currentLang === 'ja' ? 'en' : 'ja';
+    const t = i18n[currentLang];
+    document.documentElement.lang = currentLang;
+    $('brand-sub').textContent = t.brandSub; $('local-label').textContent = t.local;
+    $('character-label').textContent = t.character; $('script-label').textContent = t.script; $('voice-label').textContent = t.voice; $('audio-label').textContent = t.audio;
+    $('editor-kicker').textContent = t.kicker; $('editor-title').textContent = t.title; textInput.placeholder = t.placeholder;
+    $('count-label').textContent = t.count; $('clear-btn').textContent = t.clear; $('sample-btn').textContent = t.sample; $('generate-note').innerHTML = t.note;
+    $('generate-btn').textContent = t.generate; $('format-label').textContent = t.format; $('btn-download').textContent = t.download; $('audio-title').textContent = t.latest;
+    $('footer-left').textContent = t.footerLeft; $('footer-right').textContent = t.footerRight;
+    if (!player.src) $('audio-status').textContent = t.ready;
+    if (!player.src) $('state-text').textContent = t.readyCharacter;
+}
 
-            setStatus(true);
-            try {
-                const response = await fetch('/api/download', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+function updateCount() { $('char-count').textContent = textInput.value.length.toLocaleString(); }
+function setStatus(message = '', error = false) { $('status-msg').textContent = message; $('status-msg').style.color = error ? 'var(--danger)' : 'var(--coral-hot)'; }
+function setBusy(busy) {
+    $('generate-btn').disabled = busy; $('btn-download').disabled = busy;
+    $('state-dot').classList.toggle('busy', busy);
+    $('generate-btn').textContent = busy ? i18n[currentLang].generating : i18n[currentLang].generate;
+    $('audio-status').textContent = busy ? i18n[currentLang].processing : (player.src ? i18n[currentLang].readyPlay : i18n[currentLang].ready);
+    $('state-text').textContent = busy ? i18n[currentLang].generating : (player.src ? i18n[currentLang].readyPlay : i18n[currentLang].readyCharacter);
+}
+function setCharacterState(state) {
+    const t = i18n[currentLang];
+    $('state-dot').classList.toggle('busy', state === 'busy' || state === 'playing');
+    $('state-text').textContent = state === 'busy' ? t.generating : state === 'playing' ? t.playing : player.src ? t.readyPlay : t.readyCharacter;
+}
 
-                if (!response.ok) {
-                    const errText = await response.text();
-                    throw new Error(errText || "Conversion pipeline failed");
-                }
+function getPayload() {
+    return { text: textInput.value, voice: currentVoice, format: $('format-select').value };
+}
 
-                const filename = response.headers.get('X-Filename') || `ja_jp_unknown.${payload.format}`;
-                const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
+function formatTime(seconds) {
+    if (!Number.isFinite(seconds)) return '00:00';
+    const m = Math.floor(seconds / 60); const s = Math.floor(seconds % 60);
+    return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
 
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+function drawWaveform(buffer, progress = 0) {
+    const canvas = $('waveform'); const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1; canvas.width = Math.max(1, Math.floor(rect.width*dpr)); canvas.height = Math.max(1, Math.floor(rect.height*dpr));
+    const ctx = canvas.getContext('2d'); ctx.scale(dpr,dpr); const w=rect.width,h=rect.height;
+    ctx.clearRect(0,0,w,h); ctx.fillStyle='rgba(238,233,221,.035)'; ctx.fillRect(0,h/2,w,1);
+    if (!buffer) return;
+    const data=buffer.getChannelData(0), step=Math.max(1,Math.floor(data.length/w));
+    ctx.lineWidth=1.25;
+    for(let x=0;x<w;x++){
+        const start=x*step; let min=1,max=-1;
+        for(let j=0;j<step && start+j<data.length;j++){const v=data[start+j]; if(v<min)min=v;if(v>max)max=v;}
+        const amp=Math.max(2,Math.min(h*.42,Math.max(Math.abs(min),Math.abs(max))*h*.72));
+        ctx.strokeStyle = x <= w*progress ? 'rgba(227,111,93,.95)' : 'rgba(111,201,197,.72)';
+        ctx.beginPath(); ctx.moveTo(x,h/2-amp); ctx.lineTo(x,h/2+amp); ctx.stroke();
+    }
+}
 
-            } catch (error) {
-                console.error(error);
-                alert("Download Error:\n" + error.message);
-            } finally {
-                setStatus(false);
-            }
-        }
-    </script>
+async function loadWaveform(blob) {
+    try {
+        audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+        const arrayBuffer = await blob.arrayBuffer();
+        audioBuffer = await audioContext.decodeAudioData(arrayBuffer.slice(0));
+        drawWaveform(audioBuffer, 0);
+    } catch (e) { audioBuffer = null; drawWaveform(null, 0); }
+}
+
+async function playAudio() {
+    const payload = getPayload();
+    if (!payload.text.trim()) { setStatus(currentLang === 'ja' ? 'テキストを入力してください。' : 'Enter some text first.', true); textInput.focus(); return; }
+    setBusy(true); setStatus('');
+    try {
+        const response = await fetch('/api/play', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+        if (!response.ok) throw new Error(await response.text() || 'Backend generation failed');
+        const blob = await response.blob();
+        if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+        currentObjectUrl = URL.createObjectURL(blob);
+        player.src = currentObjectUrl;
+        $('audio-file').textContent = `${payload.voice} · WAV`;
+        $('audio-status').textContent = i18n[currentLang].readyPlay;
+        $('play-toggle').disabled = false; seek.disabled=false; volume.disabled=false;
+        await loadWaveform(blob);
+        await player.play();
+    } catch (error) {
+        console.error(error); setStatus(`${i18n[currentLang].error}: ${error.message}`, true); $('audio-status').textContent=i18n[currentLang].error; setCharacterState('ready');
+    } finally { setBusy(false); }
+}
+
+async function downloadAudio() {
+    const payload=getPayload();
+    if (!payload.text.trim()) { setStatus(currentLang === 'ja' ? 'テキストを入力してください。' : 'Enter some text first.', true); textInput.focus(); return; }
+    setBusy(true); setStatus('');
+    try {
+        const response=await fetch('/api/download',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        if(!response.ok) throw new Error(await response.text() || 'Conversion pipeline failed');
+        const filename=response.headers.get('X-Filename') || `ja_jp_unknown.${payload.format}`;
+        const blob=await response.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a');
+        a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+        setStatus(currentLang === 'ja' ? `保存しました: ${filename}` : `Saved: ${filename}`);
+    } catch(error) { console.error(error); setStatus(`${i18n[currentLang].error}: ${error.message}`, true); }
+    finally { setBusy(false); }
+}
+
+playToggle.addEventListener('click', async () => {
+    if (!player.src) return;
+    if (player.paused) await player.play(); else player.pause();
+});
+player.addEventListener('play',()=>{ playToggle.textContent='Ⅱ'; setCharacterState('playing'); $('audio-status').textContent=i18n[currentLang].playing; });
+player.addEventListener('pause',()=>{ playToggle.textContent='▶'; if(!player.ended) setCharacterState('ready'); });
+player.addEventListener('ended',()=>{ playToggle.textContent='▶'; seek.value=100; drawWaveform(audioBuffer,1); setCharacterState('ready'); $('audio-status').textContent=i18n[currentLang].readyPlay; });
+player.addEventListener('loadedmetadata',()=>{ $('time-readout').textContent=`00:00 / ${formatTime(player.duration)}`; });
+player.addEventListener('timeupdate',()=>{ const p=player.duration ? player.currentTime/player.duration : 0; seek.value=p*100; $('time-readout').textContent=`${formatTime(player.currentTime)} / ${formatTime(player.duration)}`; if(audioBuffer) drawWaveform(audioBuffer,p); });
+seek.addEventListener('input',()=>{ if(player.duration) player.currentTime=(Number(seek.value)/100)*player.duration; });
+volume.addEventListener('input',()=>{ player.volume=Number(volume.value); });
+textInput.addEventListener('input',updateCount);
+$('clear-btn').addEventListener('click',()=>{ textInput.value=''; updateCount(); setStatus(''); textInput.focus(); });
+$('sample-btn').addEventListener('click',()=>{ textInput.value=i18n[currentLang].sampleText; updateCount(); textInput.focus(); });
+window.addEventListener('resize',()=>drawWaveform(audioBuffer, player.duration ? player.currentTime/player.duration : 0));
+window.addEventListener('beforeunload',()=>{if(currentObjectUrl)URL.revokeObjectURL(currentObjectUrl);});
+document.addEventListener('keydown', e=>{
+    if((e.ctrlKey||e.metaKey) && e.key==='Enter'){e.preventDefault(); playAudio();}
+    if(e.code==='Space' && document.activeElement !== textInput && player.src){e.preventDefault();playToggle.click();}
+});
+
+renderVoices(); selectVoice(currentVoice); updateCount();
+</script>
 </body>
 </html>
