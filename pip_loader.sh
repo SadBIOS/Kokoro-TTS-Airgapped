@@ -1,13 +1,15 @@
 #!/bin/bash
 
 SCRIPT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-WHEELS_DIR="$SCRIPT_ROOT/py_pack_bundles/wheels"
-mkdir -p "$WHEELS_DIR"
+PY_SRC_EXTRC_DIR="$SCRIPT_ROOT/Python-3.12.8"
+TMP_BIN_DUMP="$SCRIPT_ROOT/python3-12-8/compiled_bins"
+TMP_BIN="$TMP_BIN_DUMP/bin/python$(v=${PY_SRC_EXTRC_DIR##*-}; echo "${v%.*}")"
+PY_ENV_SET="PYTHONNOUSERSITE=1"
+WHEELS_DIR="$SCRIPT_ROOT/kokoro_wheels"
 
-PYTHON_BIN="$SCRIPT_ROOT/Python-3.12.8/python"
+mkdir -pv "$WHEELS_DIR"
 
-if [ ! -f "$PYTHON_BIN" ]; then
-    echo "Error: Local Python binary not found at $PYTHON_BIN"
+if [ ! -f "$TMP_BIN" ]; then
     exit 1
 fi
 
@@ -45,24 +47,18 @@ packages=(
     "misaki[en,ja,ko,zh]"
     "spacy"
     "inflect"
+    "onnxruntime"
     "phonemizer-fork"
     "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl"
 )
 
-echo "Starting isolated package downloads using local Python ($PYTHON_BIN)..."
-
 for pkg in "${packages[@]}"; do
     pkg_name=$(basename "$pkg" | cut -d'[' -f1 | cut -d'@' -f1 | tr '[:upper:]' '[:lower:]')
     target_dir="$WHEELS_DIR/$pkg_name"
-    mkdir -p "$target_dir"
-    echo "Downloading: $pkg -> wheels/$pkg_name/"
+    mkdir -pv "$target_dir"
     if [[ "$pkg" == *"torch"* ]]; then
-        "$PYTHON_BIN" -m pip download "$pkg" --extra-index-url https://download.pytorch.org/whl/cpu -d "$target_dir"
-    elif [[ "$pkg" == http* ]]; then
-        "$PYTHON_BIN" -m pip download "$pkg" -d "$target_dir"
+        eval "$PY_ENV_SET $TMP_BIN -m pip --disable-pip-version-check --no-cache-dir download '$pkg' --extra-index-url https://download.pytorch.org/whl/cpu --dest '$target_dir'"
     else
-        "$PYTHON_BIN" -m pip download "$pkg" -d "$target_dir"
+        eval "$PY_ENV_SET $TMP_BIN -m pip --disable-pip-version-check --no-cache-dir download '$pkg' --dest '$target_dir'"
     fi
 done
-
-echo "All packages downloaded into separate isolated directories!"
