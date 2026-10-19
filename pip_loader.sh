@@ -4,10 +4,11 @@ SCRIPT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PY_SRC_EXTRC_DIR="$SCRIPT_ROOT/Python-3.12.8"
 TMP_BIN_DUMP="$SCRIPT_ROOT/python3-12-8/compiled_bins"
 TMP_BIN="$TMP_BIN_DUMP/bin/python$(v=${PY_SRC_EXTRC_DIR##*-}; echo "${v%.*}")"
-PY_ENV_SET="PYTHONNOUSERSITE=1"
+PIP_TMP="$SCRIPT_ROOT/pip_tmp"
+PY_ENV_SET="PYTHONNOUSERSITE=1 TMPDIR=$PIP_TMP"
 WHEELS_DIR="$SCRIPT_ROOT/kokoro_wheels"
 
-mkdir -pv "$WHEELS_DIR"
+mkdir -pv "$WHEELS_DIR" "$PIP_TMP"
 
 if [ ! -f "$TMP_BIN" ]; then
     exit 1
