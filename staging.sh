@@ -6,8 +6,11 @@ fi
 
 SCRIPT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PY_SRC_FILE="$SCRIPT_ROOT/Python-3.12.8.tar.xz"
-TMP_BIN_DUMP="$SCRIPT_ROOT/python3-12-8"
+TMP_BIN_DUMP="$SCRIPT_ROOT/python3-12-8/compiled_bins"
+PY_SRC_EXTRC_DIR="$SCRIPT_ROOT/Python-3.12.8"
+TMP_BIN="$TMP_BIN_DUMP/bin/python$(v=${PY_SRC_EXTRC_DIR##*-}; echo "${v%.*}")"
 
+PY_ENV_SET="PYTHONNOUSERSITE=1"
 PIP_LOAD_SCRIPT="$SCRIPT_ROOT/pip_loader.sh"
 
 DEPS=(
@@ -43,11 +46,27 @@ function check_deps() {
 
 function build_python () {
     if check_deps && [ -f "$PY_SRC_FILE" ]; then
+        mkdir -pv "$TMP_BIN_DUMP"
         tar -xvf "$PY_SRC_FILE" -C "$SCRIPT_ROOT"
-
+        cd "$PY_SRC_EXTRC_DIR"
+        ./configure --prefix=${TMP_BIN_DUMP} --enable-optimizations --with-ensurepip=install
+        make -j $(nproc)
+        eval "$PY_ENV_SET make install"
+        eval "$PY_ENV_SET $TMP_BIN --version"
+        eval "$PY_ENV_SET $TMP_BIN -m pip --version"
+        cd "$SCRIPT_ROOT"
         return 0
     else
         echo "Dependencies are missing :("
         return 1
     fi
 }
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --build)
+            build_python
+            exit 0
+        ;;
+    esac
+done
