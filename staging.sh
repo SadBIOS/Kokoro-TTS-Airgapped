@@ -42,12 +42,12 @@ function check_deps() {
 }
 
 function build_python () {
-    if check_deps; then
+    if check_deps && [ -f "$PY_SRC_FILE" ]; then
         tar -xvf "$PY_SRC_FILE" -C "$SCRIPT_ROOT"
 
-        exit 0
+        return 0
     else
         echo "Dependencies are missing :("
-        exit 1
+        return 1
     fi
 }

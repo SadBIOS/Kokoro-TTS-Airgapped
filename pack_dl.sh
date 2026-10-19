@@ -52,14 +52,14 @@ function check_deps() {
 function fetch_pax() {
     if conn_stat && check_deps; then
         if wget -O "$PY_SRC_FILE" "$PY_SRC_URL" && wget -O "$FASTAPI_REPO_FILE" "$FASTAPI_REPO_SRC" && wget -O "$FASAPI_MODEL_PATH" "$FASTAPI_MODEL_SRC"; then
-            exit 0
+            return 0
         else
             echo "Failed to fetch files :/"
-            exit 1
+            return 1
         fi
     else
         echo "Either dependencies are missing or the device is offline :)"
-        exit 1
+        return 1
     fi
 }
 
