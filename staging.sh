@@ -61,7 +61,7 @@ function build_python () {
         eval "$PY_ENV_SET $TMP_BIN --version"
         eval "$PY_ENV_SET $TMP_BIN -m pip --version"
         cd "$SCRIPT_ROOT"
-        if [ -d "$PY_SRC_EXTRC_DIR"]; then
+        if [ -d "$PY_SRC_EXTRC_DIR" ]; then
             rm -vrf "$PY_SRC_EXTRC_DIR"
         fi
         return 0
