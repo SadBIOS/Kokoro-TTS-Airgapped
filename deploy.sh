@@ -11,7 +11,7 @@ STAGER="$SCRIPT_ROOT/staging.sh"
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --load-assets)
-            "$STAGER"
+            "$STAGER" --build
         ;;
 
         --cleanup)
