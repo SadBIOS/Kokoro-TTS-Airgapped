@@ -102,6 +102,7 @@ while [[ $# -gt 0 ]]; do
         	offline
             "$EXTERN_PACK_RESOLVER" --fetch-external-packages
             "$DEPL_AGENT" --load-assets
+            "$DEPL_AGENT" --trigger-compression
             exit 0
         ;;
     esac
