@@ -100,7 +100,6 @@ while [[ $# -gt 0 ]]; do
         --build-offline-archive)
             "$EXTERN_PACK_RESOLVER" --fetch-external-packages
             "$DEPL_AGENT" --load-assets
-            makepkg_cache
             exit 0
         ;;
     esac
