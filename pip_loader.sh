@@ -63,3 +63,7 @@ for pkg in "${packages[@]}"; do
         eval "$PY_ENV_SET $TMP_BIN -m pip --disable-pip-version-check --no-cache-dir download '$pkg' --dest '$target_dir'"
     fi
 done
+
+if [ -d "$PIP_TMP" ]; then
+    rm -rf "$PIP_TMP"
+fi
