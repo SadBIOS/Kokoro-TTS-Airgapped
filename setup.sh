@@ -98,6 +98,7 @@ while [[ $# -gt 0 ]]; do
         ;;
 
         --build-offline-archive)
+            makepkg_cache
             "$EXTERN_PACK_RESOLVER" --fetch-external-packages
             "$DEPL_AGENT" --load-assets
             exit 0
