@@ -1,9 +1,17 @@
 #!/bin/bash
 
 SCRIPT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-PY_SRC_EXTRC_DIR="$SCRIPT_ROOT/Python-3.12.8"
-TMP_BIN_DUMP="$SCRIPT_ROOT/python3-12-8/compiled_bins"
-TMP_BIN="$TMP_BIN_DUMP/bin/python$(v=${PY_SRC_EXTRC_DIR##*-}; echo "${v%.*}")"
+PY_SRC_FILE="$SCRIPT_ROOT/Python-3.12.8.tar.xz"
+
+PY_SRC_ARC_NAM="${PY_SRC_FILE##*/}"
+PY_VERSION="${PY_SRC_ARC_NAM#Python-}"
+PY_VERSION="${PY_VERSION%.tar.xz}"
+PY_VERSION_DASH="${PY_VERSION//./-}"
+
+TMP_BIN_DUMP="$SCRIPT_ROOT/python$PY_VERSION_DASH/compiled_bins"
+TMP_BIN="$TMP_BIN_DUMP/bin/python${PY_VERSION%.*}"
+
+
 PIP_TMP="$SCRIPT_ROOT/pip_tmp"
 PY_ENV_SET="PYTHONNOUSERSITE=1 TMPDIR=$PIP_TMP"
 WHEELS_DIR="$SCRIPT_ROOT/kokoro_wheels"

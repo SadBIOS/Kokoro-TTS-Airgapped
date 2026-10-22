@@ -6,9 +6,15 @@ fi
 
 SCRIPT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PY_SRC_FILE="$SCRIPT_ROOT/Python-3.12.8.tar.xz"
-TMP_BIN_DUMP="$SCRIPT_ROOT/python3-12-8/compiled_bins"
-PY_SRC_EXTRC_DIR="$SCRIPT_ROOT/Python-3.12.8"
-TMP_BIN="$TMP_BIN_DUMP/bin/python$(v=${PY_SRC_EXTRC_DIR##*-}; echo "${v%.*}")"
+
+PY_SRC_ARC_NAM="${PY_SRC_FILE##*/}"
+PY_VERSION="${PY_SRC_ARC_NAM#Python-}"
+PY_VERSION="${PY_VERSION%.tar.xz}"
+PY_VERSION_DASH="${PY_VERSION//./-}"
+
+PY_SRC_EXTRC_DIR="$SCRIPT_ROOT/Python-$PY_VERSION"
+TMP_BIN_DUMP="$SCRIPT_ROOT/python$PY_VERSION_DASH/compiled_bins"
+TMP_BIN="$TMP_BIN_DUMP/bin/python${PY_VERSION%.*}"
 
 PY_ENV_SET="PYTHONNOUSERSITE=1"
 PIP_LOAD_SCRIPT="$SCRIPT_ROOT/pip_loader.sh"
@@ -55,6 +61,9 @@ function build_python () {
         eval "$PY_ENV_SET $TMP_BIN --version"
         eval "$PY_ENV_SET $TMP_BIN -m pip --version"
         cd "$SCRIPT_ROOT"
+        if [ -d "$PY_SRC_EXTRC_DIR"]; then
+            rm -vrf "$PY_SRC_EXTRC_DIR"
+        fi
         return 0
     else
         echo "Dependencies are missing :("
