@@ -12,12 +12,15 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         --load-assets)
             "$STAGER" --build
+            exit 0
         ;;
 
         --cleanup)
+            exit 0
         ;;
 
         --setup-kts-sys-lvl)
+            exit 0
         ;;
     esac
 done
