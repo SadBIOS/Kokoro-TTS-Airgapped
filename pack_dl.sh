@@ -9,10 +9,12 @@ SCRIPT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PY_SRC_URL="https://www.python.org/ftp/python/3.12.8/Python-3.12.8.tar.xz"
 FASTAPI_REPO_SRC="https://github.com/remsky/Kokoro-FastAPI/archive/refs/heads/master.zip"
 FASTAPI_MODEL_SRC="https://huggingface.co/hexgrad/Kokoro-82M/resolve/main/kokoro-v1_0.pth"
+UNIDIC_URL="https://cotonoha-dic.s3-ap-northeast-1.amazonaws.com/unidic-3.1.0.zip"
 
 FASAPI_MODEL_PATH="$SCRIPT_ROOT/kokoro-v1_0.pth"
 PY_SRC_FILE="$SCRIPT_ROOT/Python-3.12.8.tar.xz"
 FASTAPI_REPO_FILE="$SCRIPT_ROOT/Kokoro-FastAPI.zip"
+UNIDIC_DIC_FILE="$SCRIPT_ROOT/unidic-3.1.0.zip"
 
 DEPS=(
     ffmpeg
@@ -51,7 +53,7 @@ function check_deps() {
 
 function fetch_pax() {
     if conn_stat && check_deps; then
-        if wget -O "$PY_SRC_FILE" "$PY_SRC_URL" && wget -O "$FASTAPI_REPO_FILE" "$FASTAPI_REPO_SRC" && wget -O "$FASAPI_MODEL_PATH" "$FASTAPI_MODEL_SRC"; then
+        if wget -O "$PY_SRC_FILE" "$PY_SRC_URL" && wget -O "$FASTAPI_REPO_FILE" "$FASTAPI_REPO_SRC" && wget -O "$FASAPI_MODEL_PATH" "$FASTAPI_MODEL_SRC" && wget -O "$UNIDIC_DIC_FILE" "$UNIDIC_URL"; then
             return 0
         else
             echo "Failed to fetch files :/"
