@@ -14,6 +14,7 @@ RUNTIME="$SCRIPT_ROOT/apt_engine.sh"
 PKGLIST="$SCRIPT_ROOT/pkglist.txt"
 PKG_ARCH="$SCRIPT_ROOT/kokoro_tts_dependencies.tar.gz"
 EXTERN_PACK_RESOLVER="$SCRIPT_ROOT/pack_dl.sh"
+DEPL_AGENT="$SCRIPT_ROOT/deploy.sh"
 
 DEPS=(
     ffmpeg
@@ -98,6 +99,7 @@ while [[ $# -gt 0 ]]; do
 
         --build-offline-archive)
             "$EXTERN_PACK_RESOLVER" --fetch-external-packages
+            "$DEPL_AGENT" --load-assets
             makepkg_cache
             exit 0
         ;;

@@ -1,6 +1,23 @@
 #!/bin/bash
 
-sudo -v || {
-    printf "\n\e[31mAuthentication failed\e[0m\n" >&2
-    exit 1
-}
+if [[ $# -eq 0 ]]; then
+    exit 0
+fi
+
+SCRIPT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+STAGER="$SCRIPT_ROOT/staging.sh"
+
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --load-assets)
+            "$STAGER"
+        ;;
+
+        --cleanup)
+        ;;
+
+        --setup-kts-sys-lvl)
+        ;;
+    esac
+done

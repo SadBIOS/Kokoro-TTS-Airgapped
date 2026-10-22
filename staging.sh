@@ -66,6 +66,7 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         --build)
             build_python
+            "$PIP_LOAD_SCRIPT"
             exit 0
         ;;
     esac
