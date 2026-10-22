@@ -15,7 +15,7 @@ while [[ $# -gt 0 ]]; do
             exit 0
         ;;
 
-        --cleanup)
+        --trigger-compression)
             exit 0
         ;;
 
