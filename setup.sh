@@ -93,11 +93,6 @@ while [[ $# -gt 0 ]]; do
             exit 0
         ;;
 
-        --resolve-offline)
-            offline
-            exit 0
-        ;;
-
         --build-offline-archive)
         	makepkg_cache
         	offline
@@ -108,6 +103,7 @@ while [[ $# -gt 0 ]]; do
         ;;
 
         --deploy)
+            offline
             "$DEPL_AGENT" --setup-kts-sys-lvl
             exit 0
         ;;
