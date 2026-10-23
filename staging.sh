@@ -39,6 +39,7 @@ DEPS=(
     wget
     espeak-ng
     libsndfile1
+    unzip
 )
 
 function check_deps() {

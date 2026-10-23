@@ -36,6 +36,7 @@ DEPS=(
     wget
     espeak-ng
     libsndfile1
+    unzip
 )
 
 
