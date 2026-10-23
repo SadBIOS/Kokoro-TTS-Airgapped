@@ -79,5 +79,10 @@ while [[ $# -gt 0 ]]; do
             "$PIP_LOAD_SCRIPT"
             exit 0
         ;;
+
+        --just-load)
+            build_python
+            exit 0
+        ;;
     esac
 done

@@ -48,3 +48,4 @@ sudo systemctl enable kokoro.service
 sudo systemctl start kokoro.service
 sudo systemctl enable tts-web.service
 sudo systemctl start tts-web.service
+sudo systemctl restart tts-web.service
