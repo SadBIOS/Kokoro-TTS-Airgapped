@@ -103,7 +103,7 @@ while [[ $# -gt 0 ]]; do
         ;;
 
         --deploy)
-            offline
+        	offline
             "$DEPL_AGENT" --setup-kts-sys-lvl
             exit 0
         ;;

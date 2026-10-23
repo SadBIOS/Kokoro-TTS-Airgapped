@@ -23,7 +23,7 @@ FINISH_HIM="$SCRIPT_ROOT/finish_him.sh"
 
 FASTAPI_ARC="$SCRIPT_ROOT/Kokoro-FastAPI.zip"
 WHEELS="$SCRIPT_ROOT/kokoro_wheels.tar.gz"
-
+WHEELDUMP="$SCRIPT_ROOT/kokoro_wheels"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -48,8 +48,8 @@ while [[ $# -gt 0 ]]; do
             tar -xzvf "$WHEELS"
             "$UNLOADER"
             "$FINISH_HIM"
-            if [ -d "$WHEELS" ]; then
-                rm -vrf "$WHEELS"
+            if [ -d "$WHEELDUMP" ]; then
+                rm -vrf "$WHEELDUMP"
             fi
             exit 0
         ;;
