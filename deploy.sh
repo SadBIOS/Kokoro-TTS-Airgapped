@@ -16,6 +16,11 @@ TMP_BIN_DUMP="$SCRIPT_ROOT/python$PY_VERSION_DASH"
 
 WHEELS_DIR="$SCRIPT_ROOT/kokoro_wheels"
 STAGER="$SCRIPT_ROOT/staging.sh"
+FASTAPI_DIR="$SCRIPT_ROOT/Kokoro-FastAPI-master"
+
+UNLOADER="$SCRIPT_ROOT/pip_unloader.sh"
+FINISH_HIM="$SCRIPT_ROOT/finish_him.sh"
+
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -28,10 +33,13 @@ while [[ $# -gt 0 ]]; do
             tar -czvf "${WHEELS_DIR}.tar.gz" -C "$(dirname "$WHEELS_DIR")" "$(basename "$WHEELS_DIR")"
             rm -vrf "$WHEELS_DIR"
             rm -vrf "$TMP_BIN_DUMP"
+            rm -vrf "$FASTAPI_DIR"
             exit 0
         ;;
 
         --setup-kts-sys-lvl)
+            "$UNLOADER"
+            "$FINISH_HIM"
             exit 0
         ;;
     esac

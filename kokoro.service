@@ -3,17 +3,19 @@ Description=Kokoro TTS FastAPI Server
 After=network.target
 
 [Service]
-WorkingDirectory=%h/Kokoro-FastAPI
-Environment="PATH=%h/Kokoro-FastAPI/venv/bin"
-Environment="PYTHONPATH=%h/Kokoro-FastAPI"
+User=__USER__
+Group=__USER__
+WorkingDirectory=__HOME__/Kokoro-TTS-Airgapped-main/Kokoro-FastAPI-master
+Environment="PATH=__HOME__/Kokoro-TTS-Airgapped-main/Kokoro-FastAPI-master/venv/bin"
+Environment="PYTHONPATH=__HOME__/Kokoro-TTS-Airgapped-main/Kokoro-FastAPI-master"
 Environment="DEVICE=cpu"
 Environment="USE_GPU=false"
 Environment="HF_HUB_OFFLINE=1"
 Environment="TRANSFORMERS_OFFLINE=1"
-Environment="OMP_NUM_THREADS=4"
-ExecStart=%h/Kokoro-FastAPI/venv/bin/uvicorn api.src.main:app --host 0.0.0.0 --port 8000
+Environment="OMP_NUM_THREADS=__THREADS__"
+ExecStart=__HOME__/Kokoro-TTS-Airgapped-main/Kokoro-FastAPI-master/venv/bin/uvicorn api.src.main:app --host 0.0.0.0 --port 8000
 Restart=always
 RestartSec=3
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target
