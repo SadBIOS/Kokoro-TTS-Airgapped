@@ -61,9 +61,15 @@ packages=(
 )
 
 for pkg in "${packages[@]}"; do
-    pkg_name=$(basename "$pkg" | cut -d'[' -f1 | cut -d'@' -f1 | tr '[:upper:]' '[:lower:]')
+    if [[ "$pkg" == *.whl ]]; then
+        pkg_name="en_core_web_sm"
+    else
+        pkg_name=$(basename "$pkg" | cut -d'[' -f1 | cut -d'@' -f1 | tr '[:upper:]' '[:lower:]')
+    fi
+
     target_dir="$WHEELS_DIR/$pkg_name"
     mkdir -pv "$target_dir"
+
     if [[ "$pkg" == *"torch"* ]]; then
         eval "$PY_ENV_SET $TMP_BIN -m pip --disable-pip-version-check --no-cache-dir download '$pkg' --extra-index-url https://download.pytorch.org/whl/cpu --dest '$target_dir'"
     else
@@ -74,3 +80,5 @@ done
 if [ -d "$PIP_TMP" ]; then
     rm -rf "$PIP_TMP"
 fi
+
+
