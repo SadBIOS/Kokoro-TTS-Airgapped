@@ -151,8 +151,9 @@ BOOT_ORDER=0xf146
 
 ## Setting up Kokoro-TTS
 > [!CAUTION]
-> Running commands from random people is a bad idea. With that being said, 
-> HERE WE GO! 
+> Running commands/scripts from random people is a bad idea. With that being said, 
+> HERE WE GO!
+
 ```bash
 sudo apt update
 ```
