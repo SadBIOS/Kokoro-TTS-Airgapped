@@ -88,11 +88,6 @@ function offline() {
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --resolve-online)
-            online
-            exit 0
-        ;;
-
         --build-offline-archive)
         	makepkg_cache
         	offline
