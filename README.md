@@ -11,8 +11,13 @@
 > 
 > HERE WE GO!
 
+---
+
+> [!CAUTION]
+> In order to install this package on a Raspberry Pi one must follow the steps before running the commands described in the previous section.
+
 <details>
-<summary>Setting up the Raspberry Pi and installing essential packages (before writing to disk)</summary>
+<summary>Setting up the Raspberry Pi and installing essential packages</summary>
 
 ### 1. Force boot to *USB-MSD* overriding the interal boot drive
 Set boot mode to usb (this is required if only a previous install exists on the same boot device).
