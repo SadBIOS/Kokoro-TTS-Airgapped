@@ -13,7 +13,7 @@
 
 ---
 
-> [!WARNING]
+> [!]
 > In order to install this package on a Raspberry Pi one must follow the steps before running the commands described in the previous section.
 
 <details>
