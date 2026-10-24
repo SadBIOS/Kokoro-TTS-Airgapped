@@ -5,22 +5,8 @@
 </p>
 
 <details>
+<summary><h2>Setting up the Raspberry Pi and installing essential packages (before writing to disk)</h2></summary>
 
-<summary>Setting up the Raspberry Pi and installing essential packages (before writing to disk)</summary>
-
-### You can add a header
-
-You can add text within a collapsed section.
-
-You can add an image or a code block, too.
-
-```ruby
-   puts "Hello World"
-```
-
-</details>
-
-## 
 ### 1. Force boot to *USB-MSD* overriding the interal boot drive
 Set boot mode to usb (this is required if only a previous install exists on the same boot device).
 
@@ -159,6 +145,10 @@ Set order to
 ```bash
 BOOT_ORDER=0xf146 
 ```
+
+</details>
+
+
 ## Setting up Kokoro-TTS
 > [!CAUTION]
 > Running commands from random people is a bad idea. With that being said, 
