@@ -44,15 +44,6 @@ function conn_stat() {
     ping -c 1 -W 2 1.1.1.1 &>/dev/null || ping -c 1 -W 2 8.8.8.8 &>/dev/null
 }
 
-function online() {
-    if ! conn_stat; then
-        echo -e "\033[31mCannot resolve dependencies on an offline machine\033[0m" >&2
-        exit 1
-    fi
-
-    sudo apt update && sudo apt install -y "${DEPS[@]}"
-}
-
 function makepkg_cache() {
     if conn_stat; then
         if [[ -f "$PKGLIST" || -f "$PKG_ARCH" ]]; then
