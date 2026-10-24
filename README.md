@@ -6,7 +6,7 @@
 
 ## Setting up Kokoro-TTS
 
-> [!CAUTION]
+> [!CAUTIONWARNING]
 > Running commands/scripts from random people is a bad idea. With that being said,
 > 
 > HERE WE GO!
