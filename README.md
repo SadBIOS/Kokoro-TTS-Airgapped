@@ -4,8 +4,15 @@
   <img src="https://raw.githubusercontent.com/SadBIOS/Kokoro-TTS-Airgapped/refs/heads/main/home_page.png" alt="How I Look Mate?" width="90%">
 </p>
 
+## Setting up Kokoro-TTS
+
+> [!CAUTION]
+> Running commands/scripts from random people is a bad idea. With that being said,
+> 
+> HERE WE GO!
+
 <details>
-<summary><h2>Setting up the Raspberry Pi and installing essential packages (before writing to disk)</h2></summary>
+<summary>Setting up the Raspberry Pi and installing essential packages (before writing to disk)</summary>
 
 ### 1. Force boot to *USB-MSD* overriding the interal boot drive
 Set boot mode to usb (this is required if only a previous install exists on the same boot device).
@@ -145,16 +152,7 @@ Set order to
 ```bash
 BOOT_ORDER=0xf146 
 ```
-
 </details>
-
-
-## Setting up Kokoro-TTS
-
-> [!CAUTION]
-> Running commands/scripts from random people is a bad idea. With that being said,
-> 
-> HERE WE GO!
 
 ---
 ## Local API Test
