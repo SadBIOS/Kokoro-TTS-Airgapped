@@ -6,7 +6,7 @@
 
 <details>
 
-<summary>Tips for collapsed sections</summary>
+<summary>Setting up the Raspberry Pi and installing essential packages (before writing to disk)</summary>
 
 ### You can add a header
 
@@ -20,7 +20,7 @@ You can add an image or a code block, too.
 
 </details>
 
-## Setting up the Raspberry Pi and installing essencial packages (before writing to disk)
+## 
 ### 1. Force boot to *USB-MSD* overriding the interal boot drive
 Set boot mode to usb (this is required if only a previous install exists on the same boot device).
 
