@@ -4,6 +4,21 @@
   <img src="https://raw.githubusercontent.com/SadBIOS/Kokoro-TTS-Airgapped/refs/heads/main/home_page.png" alt="How I Look Mate?" width="90%">
 </p>
 
+<details>
+
+<summary>Tips for collapsed sections</summary>
+
+### You can add a header
+
+You can add text within a collapsed section.
+
+You can add an image or a code block, too.
+
+```ruby
+   puts "Hello World"
+```
+
+</details>
 
 ## Setting up the Raspberry Pi and installing essencial packages (before writing to disk)
 ### 1. Force boot to *USB-MSD* overriding the interal boot drive
