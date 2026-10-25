@@ -1,4 +1,6 @@
-# Kokoro TTS on a Raspberry Pi<sup>®</sup>
+# Kokoro TTS on a Automation Script<sup>®</sup>
+
+This script can 
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/SadBIOS/Kokoro-TTS-Airgapped/refs/heads/main/home_page.png" alt="How I Look Mate?" width="90%">
@@ -10,6 +12,8 @@
 > Running commands/scripts from random people is a bad idea. With that being said,
 > 
 > HERE WE GO!
+
+This package
 
 ---
 
