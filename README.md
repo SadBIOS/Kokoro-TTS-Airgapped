@@ -2,8 +2,10 @@
 
 This script can be used to create packages to be deployed into airgapped nodes. Modified to work for both x86_64 and Armv8.2-A ISA ([Broadcom BCM2712](https://github.com/raspberrypi/documentation/blob/master/documentation/asciidoc/computers/processors/bcm2712.adoc)) CPUs. The script can deploy the TTS engine with a fully featured front end on the host device or create packages which can be later deployed to isolated machines.
 
-> [!NOTE]
-> jaja
+> [!CAUTION]
+> * This script is designed to work with Debian<sup>®</sup> Linux only (you are welcomed to try on other `apt` based distributions).
+> * Packages cannot be transferred between different CPU ISAs.
+> * As for Arm support this script has been fully verified to work on the Raspberry Pi<sup>®</sup> 5 16G variant with a NVMe SSD as the main storage device.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/SadBIOS/Kokoro-TTS-Airgapped/refs/heads/main/home_page.png" alt="How I Look Mate?" width="90%">
