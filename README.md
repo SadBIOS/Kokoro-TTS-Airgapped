@@ -1,6 +1,6 @@
 # Kokoro TTS Deployment Automation Script<sup>®</sup>
 
-This script can 
+This script can be used to create packages to be deployed into airgapped nodes. Modified to work for both x86_64 and Armv8-A ISA ([Broadcom BCM2712](https://github.com/raspberrypi/documentation/blob/master/documentation/asciidoc/computers/processors/bcm2712.adoc)) CPUs. 
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/SadBIOS/Kokoro-TTS-Airgapped/refs/heads/main/home_page.png" alt="How I Look Mate?" width="90%">
