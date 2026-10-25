@@ -24,10 +24,16 @@ This script can be used to create packages to be deployed into airgapped nodes. 
 ### Download Create Offline Packages in `Node A`
 On an internet connected machine run the following series of commands after downloading, extracting the repo and making the scripts executable with `chmod +x -v *.sh`
 ```bash
-
+./setup.sh --build-offline-archive
 ```
+The resulting archive will be around `12GB` transfer the root directory to the `$HOME` of `Node B` and continue with the next section (or you can install the package on the current host).
 
 ### Deploy Kokoro TTS on `Node B`
+After copying all the data from `Node A` run the following and final command (you might need to run `chmod +x -v *.sh` again to make the scripts executable).
+```bash
+./setup.sh --deploy
+```
+Now navigate to the `IP:8080` of `Node B` and use it to your hearts content!
 
 ---
 
