@@ -1,4 +1,4 @@
-# Kokoro TTS on a Automation Script<sup>®</sup>
+# Kokoro TTS Deployment Automation Script<sup>®</sup>
 
 This script can 
 
