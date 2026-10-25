@@ -18,7 +18,8 @@ This script can be used to create packages to be deployed into airgapped nodes. 
 > 
 > HERE WE GO!
 
-This package
+> [!NOTE]
+> Every reference of `Node A` will mean the online/staging machine and `Node B` will be the offline/airgapped deployment machine.
 
 ---
 
