@@ -21,6 +21,14 @@ This script can be used to create packages to be deployed into airgapped nodes. 
 > [!NOTE]
 > Every reference of `Node A` will mean the online/staging machine and `Node B` will be the offline/airgapped deployment machine.
 
+### Download Create Offline Packages in `Node A`
+On an internet connected machine run the following series of commands after downloading, extracting the repo and making the scripts executable with `chmod +x -v *.sh`
+```bash
+
+```
+
+### Deploy Kokoro TTS on `Node B`
+
 ---
 
 > [!CAUTION]
