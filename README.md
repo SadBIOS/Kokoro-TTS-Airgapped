@@ -57,13 +57,13 @@ To
 ```php
 BOOT_ORDER=0xf4
 ```
-> [!NOTE]
+> ## NOTE
 > 6 = NVMe  
 > 4 = USB  
 > 1 = SD card  
 > f = restart boot order loop
 
-> [!TIP]
+> ## TIP
 > ### In case Step 1 fails
 > If the existing OS on the NVMe overrides USB-MSD even after updating the EEPROM:
 >
@@ -96,7 +96,7 @@ dtparam=fan_temp1=45000
 dtparam=fan_temp1_hyst=5000
 dtparam=fan_speed1=127
 ```
-> [!NOTE]
+> ## NOTE
 > Here temperature is in **millidegrees** *(1000 millidegrees = 1°C)*
 > * ***fan_temp1*** is the first thermal zone (it continues as 2, 3, 4 and so on to build up a fan curve)
 > * ***fan_temp1_hyst*** is the temperature hysteresis of the first thermal zone (to prevent rapid cycling as it **bang-bang** control)
@@ -121,12 +121,12 @@ Check current bus speed
 ```bash
 sudo lspci -vvv -s 0001:01:00.0 | grep -i Lnk
 ```
-> [!NOTE]
->The following means it is running at PCIe Gen 2.0 x1 speeds
->* **LnkSta: Speed 5GT/s**
+> ## NOTE
+> The following means it is running at PCIe Gen 2.0 x1 speeds
+> * **LnkSta: Speed 5GT/s**
 >
->While this means it is running at PCIe Gen 3.0 x1 speeds
->* **LnkSta: Speed 8GT/s**
+> While this means it is running at PCIe Gen 3.0 x1 speeds
+> * **LnkSta: Speed 8GT/s**
 
 Edit with superuser permissions (obviously **\*sign\*** with micro)
 ```bash
